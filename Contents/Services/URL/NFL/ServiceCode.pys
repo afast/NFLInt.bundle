@@ -615,6 +615,7 @@ def PlayVideoNFLN(url, bitrate):
 	
  	if bitrate == '1600':
                 Log.Debug('====== responding with livestream ======')
+                Log.Debug(m3u8_url1600)
  		return IndirectResponse(VideoClipObject, key = HTTPLiveStreamURL(m3u8_url1600))
  	elif bitrate == '1200':
  		return IndirectResponse(VideoClipObject, key = HTTPLiveStreamURL(m3u8_url1200))
