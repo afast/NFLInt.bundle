@@ -236,16 +236,18 @@ def GamepassPlay(week, season, week_title):
 
   oc = ObjectContainer(title2=week_title)
 
-  list = HTML.ElementFromURL(GAMEPASS_SCHEDULE, errors='ignore', values={'week':week, 'season':season}, cacheTime=1)
+  list = JSON.ObjectFromURL('https://gamepass.nfl.com/schedule?season=' + season + '&gametype=1&week=' + week + '&format=json')['games']
 
-  for stream in list.xpath('//td[@class="gameTile"]/*/parent::td'):
-    sTeam1 = stream.xpath('./table/tr[2]/td[2]/text()')[0]
-    sTeam2 = stream.xpath('./table/tr[3]/td[2]/text()')[0]
+  for stream in list:
+    sTeam1 = stream['awayTeam']['name']
+    sTeam2 = stream['homeTeam']['name']
     sTitle = "%s @ %s" % (sTeam1,sTeam2)
-    sStreamURL = stream.xpath('./table/tr[3]/td[3]/a')[0].get('href')
-    sStreamURL = sStreamURL.replace("javascript:launchApp('","http://gamepass.nfl.com/nflgp/console.jsp?eid=").replace("')","")
+
+    sStreamURL = "http://gamepass.nfl.com/game/" + stream['id']
+
     oc.add(VideoClipObject(url=sStreamURL + "#Condensed", title=sTitle + " - Condensed Game",  thumb=R("icon-gamepass.png")))
-    oc.add(VideoClipObject(url=sStreamURL, title=sTitle + " - Full Length Game",  thumb=R("icon-gamepass.png")))
+    oc.add(VideoClipObject(url=sStreamURL + "#Full", title=sTitle + " - Full Length Game",  thumb=R("icon-gamepass.png")))
+
   return oc
 
 ###################################################################################################
@@ -284,7 +286,7 @@ def GamepassPlayweek():
 
     sStreamURL = "http://gamepass.nfl.com/game/" + stream['id']
 
-    oc.add(VideoClipObject(url=sStreamURL + "#Live", title=sTitle + game_state, summary = sSummary, thumb=R("icon-gamepass-live.png")))
+    oc.add(VideoClipObject(url=sStreamURL + "#Live", title=sTitle + ' - ' + game_state, summary = sSummary, thumb=R("icon-gamepass-live.png")))
 
   return oc
 
