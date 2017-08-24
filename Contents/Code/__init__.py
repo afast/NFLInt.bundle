@@ -215,7 +215,7 @@ def GamepassWeek(season):
   if str(currentSeason) == season:
     json = JSON.ObjectFromURL("https://gamepass.nfl.com/schedule?format=json")
     currentWeek = json['gameType'] + json['week']
-  oc.add(DirectoryObject(key = Callback(GamepassPlay, week=currentWeek, season=season, week_title=weeks[currentWeek]), title = "Current Week", thumb=R("gamepass.png")))
+    oc.add(DirectoryObject(key = Callback(GamepassPlay, week=currentWeek, season=season, week_title=weeks[currentWeek]), title = "Current Week", thumb=R("gamepass.png")))
 
   try:
     if currentWeek[1:] != "01" and currentWeek[1:] != "1":
