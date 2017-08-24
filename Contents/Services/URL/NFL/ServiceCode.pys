@@ -529,14 +529,12 @@ def PlayVideoGP(url, bitrate):
 		m3u8_page = json.loads(m3u8_pagedata)
 		m3u8_url = m3u8_page['path']
 		Log.Debug("path: " + m3u8_url)
-		#index = m3u8_url.find('_iphone.m3u8')
-		#m3u8_url4500 = m3u8_url[:index] + '_4500' + m3u8_url[index:]
-		#m3u8_url3000 = m3u8_url[:index] + '_3000' + m3u8_url[index:]
-		#m3u8_url2400 = m3u8_url[:index] + '_2400' + m3u8_url[index:]
-		#m3u8_url1600 = m3u8_url[:index] + '_1600' + m3u8_url[index:]
-		#m3u8_url1200 = m3u8_url[:index] + '_1200' + m3u8_url[index:]
-		#m3u8_url800 = m3u8_url[:index] + '_800' + m3u8_url[index:]
-		#m3u8_url400 = m3u8_url[:index] + '_400' + m3u8_url[index:]
+                replacement = "pc"
+                if Client.Platform == ClientPlatform.Android:
+                  replacement = "android"
+                elif Client.Platform == ClientPlatform.iOS:
+                  replacement = "iphone"
+                Log.Debug(Client.Platform)
                 m3u8_url4500 = m3u8_url.replace("adaptive","http").replace("iphone","4500_android")
                 m3u8_url3000 = m3u8_url.replace("adaptive","http").replace("iphone","3000_android")
                 m3u8_url2400 = m3u8_url.replace("adaptive","http").replace("iphone","2400_android")
