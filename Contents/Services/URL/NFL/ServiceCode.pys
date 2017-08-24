@@ -614,6 +614,7 @@ def PlayVideoNFLN(url, bitrate):
 	m3u8_url400 = m3u8_url.replace("adaptive","http").replace("iphone","400_" + replacement)
 	
  	if bitrate == '1600':
+                Log.Debug('====== responding with livestream ======')
  		return IndirectResponse(VideoClipObject, key = HTTPLiveStreamURL(m3u8_url1600))
  	elif bitrate == '1200':
  		return IndirectResponse(VideoClipObject, key = HTTPLiveStreamURL(m3u8_url1200))
