@@ -529,12 +529,12 @@ def PlayVideoGP(url, bitrate):
 		m3u8_page = json.loads(m3u8_pagedata)
 		m3u8_url = m3u8_page['path']
 		Log.Debug("path: " + m3u8_url)
-                replacement = "pc"
+                replacement = "iphone"
                 if Client.Platform == ClientPlatform.Android:
                   replacement = "android"
                   Log.Debug('=========== rendering for android ==========')
-                elif Client.Platform == ClientPlatform.iOS or Client.Platform == "None":
-                  replacement = "iphone"
+                elif Client.Platform in [ClientPlatform.MacOSX, ClientPlatform.Linux, ClientPlatform.Windows, ClientPlatform.Chrome]:
+                  replacement = "pc"
                   Log.Debug('=========== rendering for iphone ==========')
                 else:
                   Log.Debug('=========== rendering for PC ==========')
