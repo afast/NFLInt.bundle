@@ -2,6 +2,7 @@
 
 import re
 import json
+from dateutil import parser
 
 NFL_URL      = 'http://www.nfl.com'
 NFL_URL1     = 'http://a.video.nfl.com/'
@@ -267,19 +268,19 @@ def GamepassPlayweek():
     sTitle = "%s @ %s" % (sTeam1,sTeam2)
     try:
       if stream['gameState'] == 0:
-        sSummary = stream['dateTimeGMT']
+          sSummary = parser.parse(stream['dateTimeGMT']).strftime('%m/%d - %H:%M')
       elif stream['gameState'] == 1:
         sSummary = 'Game in Progress'
       elif stream['gameState'] == 3:
         sSummary = 'Game Finished'
       else:
-        sSummary = stream['dateTimeGMT']
+        sSummary = parser.parse(stream['dateTimeGMT']).strftime('%m/%d - %H:%M')
     except:
       sSummary = "Couldn't get summary"
 
     sStreamURL = "http://gamepass.nfl.com/game/" + stream['id']
 
-    oc.add(VideoClipObject(url=sStreamURL + "#Live", title=sTitle+" - "+sSummary, summary = sSummary, thumb=R("icon-gamepass-live.png")))
+    oc.add(VideoClipObject(url=sStreamURL + "#Live", title=sTitle, summary = sSummary, thumb=R("icon-gamepass-live.png")))
 
   return oc
 
