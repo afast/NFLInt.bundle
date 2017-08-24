@@ -378,6 +378,7 @@ def PlayVideo(url, bitrate):
 @indirect
 def PlayVideoGP(url, bitrate):
 	
+        Log.Debug("===================== play nfl network " + url + "========== " + bitrate + " ============")
 	if url.startswith("http://game"):
 		Log.Debug("Logging in play video GP")
 		username = Prefs['username']
@@ -549,6 +550,7 @@ def PlayVideoGP(url, bitrate):
 @indirect
 def PlayVideoNFLN(url, bitrate):
 
+        Log.Debug("===================== play nfl network " + url + "========== " + bitrate + " ============")
 	Log.Debug("Logging in NFL network")
 	username = Prefs['username']
 	password = Prefs['password']
