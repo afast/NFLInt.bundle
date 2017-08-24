@@ -29,7 +29,7 @@ ORDERED_SPOTLIGHT = ['nfl-countdowns', 'nfl-cant-miss-plays', 'nfl-drive-of-the-
 EVENTS = {'nfl-draft': 'Draft', 'nfl-mini-camps': 'Minicamps', 'nfl-training-camps': 'Training Camps', 'nfl-super-bowl-commercials': 'Commercials', 'nfl-hall-of-fame': 'Hall of Fame', 'nfl-preseason': 'Preseason', 'nfl-kickoff': 'Kickoff', 'nfl-thanksgiving': 'Thanksgiving', 'nfl-playoffs': 'Playoffs', 'nfl-super-bowl': 'Super Bowl', 'nfl-pro-bowl': 'Pro Bowl', 'nfl-free-agency': 'Free Agency', 'nfl-combine': 'Combine', 'nfl-senior-bowl': 'Senior Bowl', 'nfl-international-series': 'International Series', 'nfl-rookie-symposium': 'Rookie Symposium', 'nfl-thursday-night-football': 'NFL Thursday Night Football', 'nfl-honors': 'NFL Honors'}
 ORDERED_EVENTS = ['nfl-draft', 'nfl-mini-camps', 'nfl-training-camps', 'nfl-super-bowl-commercials', 'nfl-hall-of-fame', 'nfl-preseason', 'nfl-kickoff', 'nfl-thanksgiving', 'nfl-playoffs', 'nfl-super-bowl', 'nfl-pro-bowl', 'nfl-free-agency', 'nfl-combine', 'nfl-senior-bowl', 'nfl-international-series', 'nfl-rookie-symposium', 'nfl-thursday-night-football','nfl-honors']
 
-NAME = 'NFL Network'
+NAME = 'NFL International'
 ART  = 'art-default.jpg'
 ICON = 'icon-default.png'
 
