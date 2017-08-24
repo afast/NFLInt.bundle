@@ -599,7 +599,7 @@ def PlayVideoNFLN(url, bitrate):
 	m3u8_page = json.loads(m3u8_pagedata)
 	m3u8_url = m3u8_page['path']
 	Log.Debug("path: " + m3u8_url)
-        replacement = "iphone"
+        replacement = "pc"
         if Client.Platform == ClientPlatform.Android:
           replacement = "android"
           Log.Debug('=========== rendering for android ==========')
@@ -607,7 +607,7 @@ def PlayVideoNFLN(url, bitrate):
           replacement = "pc"
           Log.Debug('=========== rendering for pc      ==========')
         else:
-          Log.Debug('=========== rendering for iphone  ==========')
+          Log.Debug('=========== rendering for pc  ==========')
 	m3u8_url1600 = m3u8_url.replace("adaptive","http").replace("iphone","1600_" + replacement)
 	m3u8_url1200 = m3u8_url.replace("adaptive","http").replace("iphone","1200_" + replacement)
 	m3u8_url800 = m3u8_url.replace("adaptive","http").replace("iphone","800_" + replacement)
