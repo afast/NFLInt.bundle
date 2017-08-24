@@ -211,13 +211,14 @@ def GamepassWeek(season):
   orderedWeeks = ['100', '101','102','103','104', '201', '202', '203', '204', '205', '206', '207', '208', '209', '210', '211', '212', '213', '214', '215', '216', '217', '218', '219', '220', '221', '222']
   currentSeason = Datetime.Now().year -1 if Datetime.Now().month < 3 else Datetime.Now().year
 
+  current_week = '100'
   if str(currentSeason) == season:
-    page = HTML.ElementFromURL(GAMEPASS_SCHEDULE_WEEK, errors='ignore', cacheTime=1)
-  currentWeek = page.xpath("//select[@id = 'weekSelect']/option[@selected = 'true']")[0].get("value")
+    json = JSON.ObjectFromURL("https://gamepass.nfl.com/schedule?format=json")
+    currentWeek = json['gameType'] + json['week']
   oc.add(DirectoryObject(key = Callback(GamepassPlay, week=currentWeek, season=season, week_title=weeks[currentWeek]), title = "Current Week", thumb=R("gamepass.png")))
 
   try:
-    if currentWeek[-1:] != "1":
+    if currentWeek[1:] != "01" and currentWeek[1:] != "1":
       lastWeek = str(int(currentWeek) - 1)
       oc.add(DirectoryObject(key = Callback(GamepassPlay, week=lastWeek, season=season, week_title=weeks[lastWeek]), title = "Last Week", thumb=R("gamepass.png")))
   except:
@@ -236,7 +237,7 @@ def GamepassPlay(week, season, week_title):
 
   oc = ObjectContainer(title2=week_title)
 
-  list = JSON.ObjectFromURL('https://gamepass.nfl.com/schedule?season=' + season + '&gametype=1&week=' + week + '&format=json')['games']
+  list = JSON.ObjectFromURL('https://gamepass.nfl.com/schedule?season=' + season + '&gametype=' + week[:1] + '&week=' + week[1:] + '&format=json')['games']
 
   for stream in list:
     sTeam1 = stream['awayTeam']['name']
