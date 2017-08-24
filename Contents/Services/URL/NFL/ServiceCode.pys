@@ -187,8 +187,8 @@ def MediaObjectsForURL(url):
 					video_resolution = '540',
                                         protocol="hls",
                                         container="mpegts",
-                                        codec="h264",
-                                        audioCodec="aac",
+                                        video_codec="h264",
+                                        audio_codec="aac",
 					audio_channels = 2,
 					optimized_for_streaming = True,
 					parts = [PartObject(key = HTTPLiveStreamURL(Callback(PlayVideoNFLN, url = url, bitrate = '1600')))]
