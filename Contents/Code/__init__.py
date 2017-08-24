@@ -211,10 +211,13 @@ def GamepassWeek(season):
   orderedWeeks = ['100', '101','102','103','104', '201', '202', '203', '204', '205', '206', '207', '208', '209', '210', '211', '212', '213', '214', '215', '216', '217', '218', '219', '220', '221', '222']
   currentSeason = Datetime.Now().year -1 if Datetime.Now().month < 3 else Datetime.Now().year
 
-  current_week = '100'
+  currentWeek = '100'
   if str(currentSeason) == season:
-    json = JSON.ObjectFromURL("https://gamepass.nfl.com/schedule?format=json")
-    currentWeek = json['gameType'] + json['week']
+    current_schedule = JSON.ObjectFromURL("https://gamepass.nfl.com/schedule?format=json")
+    if len(current_schedule['week']) == 1:
+      currentWeek = current_schedule['gameType'] + '0' + current_schedule['week']
+    else:
+      currentWeek = current_schedule['gameType'] + current_schedule['week']
     oc.add(DirectoryObject(key = Callback(GamepassPlay, week=currentWeek, season=season, week_title=weeks[currentWeek]), title = "Current Week", thumb=R("gamepass.png")))
 
   try:
