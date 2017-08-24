@@ -535,13 +535,13 @@ def PlayVideoGP(url, bitrate):
                 elif Client.Platform == ClientPlatform.iOS:
                   replacement = "iphone"
                 Log.Debug(Client.Platform)
-                m3u8_url4500 = m3u8_url.replace("adaptive","http").replace("iphone","4500_android")
-                m3u8_url3000 = m3u8_url.replace("adaptive","http").replace("iphone","3000_android")
-                m3u8_url2400 = m3u8_url.replace("adaptive","http").replace("iphone","2400_android")
-                m3u8_url1600 = m3u8_url.replace("adaptive","http").replace("iphone","1600_android")
-                m3u8_url1200 = m3u8_url.replace("adaptive","http").replace("iphone","1200_android")
-                m3u8_url800 = m3u8_url.replace("adaptive","http").replace("iphone","800_android")
-                m3u8_url400 = m3u8_url.replace("adaptive","http").replace("iphone","400_android")
+                m3u8_url4500 = m3u8_url.replace("adaptive","http").replace("iphone","4500_" + replacement)
+                m3u8_url3000 = m3u8_url.replace("adaptive","http").replace("iphone","3000_"+ replacement)
+                m3u8_url2400 = m3u8_url.replace("adaptive","http").replace("iphone","2400_"+ replacement)
+                m3u8_url1600 = m3u8_url.replace("adaptive","http").replace("iphone","1600_"+ replacement)
+                m3u8_url1200 = m3u8_url.replace("adaptive","http").replace("iphone","1200_"+ replacement)
+                m3u8_url800 = m3u8_url.replace("adaptive","http").replace("iphone","800_"+ replacement)
+                m3u8_url400 = m3u8_url.replace("adaptive","http").replace("iphone","400_"+ replacement)
 	
 	if bitrate == '4500':
 		try:
