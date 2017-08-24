@@ -336,7 +336,7 @@ def MediaObjectsForURL(url):
 			),
 			MediaObject(
 				bitrate = 2400,
-				container = Container.MP4,
+				video_resolution = '540',
 				audio_channels = 2,
 				optimized_for_streaming = True,
 				parts = [PartObject(key = HTTPLiveStreamURL(Callback(PlayVideoGP, url = url, bitrate = '2400')))]
@@ -535,7 +535,9 @@ def PlayVideoGP(url, bitrate):
                   Log.Debug('=========== rendering for android ==========')
                 elif Client.Platform in [ClientPlatform.MacOSX, ClientPlatform.Linux, ClientPlatform.Windows, "Chrome"]:
                   replacement = "pc"
-                  Log.Debug('=========== rendering for iphone ==========')
+                  Log.Debug('=========== rendering for pc      ==========')
+                else:
+                  Log.Debug('=========== rendering for iphone  ==========')
                 Log.Debug(Client.Platform)
                 m3u8_url4500 = m3u8_url.replace("adaptive","http").replace("iphone","4500_" + replacement)
                 m3u8_url3000 = m3u8_url.replace("adaptive","http").replace("iphone","3000_"+ replacement)
@@ -572,12 +574,6 @@ def PlayVideoNFLN(url, bitrate):
 	username = Prefs['username']
 	password = Prefs['password']
 
-	if url.startswith("http://gamepass.nfl.com"):
-		login_url = "https://gamepass.nfl.com/nflgp/secure/schedule"
-	if url.startswith("http://gamerewind.nfl.com"):
-		login_url = "https://gamerewind.nfl.com/nflgr/secure/schedule"
-
-	#authentication_url = "https://gamepass.nfl.com/nflgp/secure/nfllogin"
 	authentication_url = "https://gamepass.nfl.com/secure/authenticate"
 	post_values = {
 		'username' : username,
@@ -590,22 +586,26 @@ def PlayVideoNFLN(url, bitrate):
 	cookie_values = HTTP.CookiesForURL("https://gamepass.nfl.com")
 	headers_value = {'Cookie' : cookie_values, 'User-Agent' : 'iPhone'}
 	publish_url = "https://gamepass.nfl.com/service/publishpoint?type=channel&id=1&format=json"
-	post_values1 = {
-	'id' : '1',
-	'type' : 'channel',
-	'nt' : '1'
-	}
 	m3u8_pagedata = HTTP.Request(url=publish_url, headers=headers_value).content
 	m3u8_page = json.loads(m3u8_pagedata)
 	m3u8_url = m3u8_page['path']
-	Log.Debug(m3u8_url)
-	m3u8_url4500 = m3u8_url.replace("adaptive","http").replace("iphone","4500_android")
-	m3u8_url3000 = m3u8_url.replace("adaptive","http").replace("iphone","3000_android")
-	m3u8_url2400 = m3u8_url.replace("adaptive","http").replace("iphone","2400_android")
-	m3u8_url1600 = m3u8_url.replace("adaptive","http").replace("iphone","1600_android")
-	m3u8_url1200 = m3u8_url.replace("adaptive","http").replace("iphone","1200_android")
-	m3u8_url800 = m3u8_url.replace("adaptive","http").replace("iphone","800_android")
-	m3u8_url400 = m3u8_url.replace("adaptive","http").replace("iphone","400_android")
+	Log.Debug("path: " + m3u8_url)
+        replacement = "iphone"
+        if Client.Platform == ClientPlatform.Android:
+          replacement = "android"
+          Log.Debug('=========== rendering for android ==========')
+        elif Client.Platform in [ClientPlatform.MacOSX, ClientPlatform.Linux, ClientPlatform.Windows, "Chrome"]:
+          replacement = "pc"
+          Log.Debug('=========== rendering for pc      ==========')
+        else:
+          Log.Debug('=========== rendering for iphone  ==========')
+	m3u8_url4500 = m3u8_url.replace("adaptive","http").replace("iphone","4500_" + replacement)
+	m3u8_url3000 = m3u8_url.replace("adaptive","http").replace("iphone","3000_" + replacement)
+	m3u8_url2400 = m3u8_url.replace("adaptive","http").replace("iphone","2400_" + replacement)
+	m3u8_url1600 = m3u8_url.replace("adaptive","http").replace("iphone","1600_" + replacement)
+	m3u8_url1200 = m3u8_url.replace("adaptive","http").replace("iphone","1200_" + replacement)
+	m3u8_url800 = m3u8_url.replace("adaptive","http").replace("iphone","800_" + replacement)
+	m3u8_url400 = m3u8_url.replace("adaptive","http").replace("iphone","400_" + replacement)
 	
 	if bitrate == '4500':
  		return IndirectResponse(VideoClipObject, key = HTTPLiveStreamURL(m3u8_url4500))
