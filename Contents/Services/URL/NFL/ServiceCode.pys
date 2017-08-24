@@ -193,27 +193,6 @@ def MediaObjectsForURL(url):
 		if Prefs['gplivebitrate'] == "Auto":
 			return [
 				MediaObject(
-					bitrate = 4500,
-					video_resolution = '720',
-					audio_channels = 2,
-					optimized_for_streaming = True,
-					parts = [PartObject(key = HTTPLiveStreamURL(Callback(PlayVideoNFLN, url = url, bitrate = '4500')))]
-				),
-				MediaObject(
-					bitrate = 3000,
-					video_resolution = '540',
-					audio_channels = 2,
-					optimized_for_streaming = True,
-					parts = [PartObject(key = HTTPLiveStreamURL(Callback(PlayVideoNFLN, url = url, bitrate = '3000')))]
-				),
-				MediaObject(
-					bitrate = 2400,
-					video_resolution = '540',
-					audio_channels = 2,
-					optimized_for_streaming = True,
-					parts = [PartObject(key = HTTPLiveStreamURL(Callback(PlayVideoNFLN, url = url, bitrate = '2400')))]
-			),
-				MediaObject(
 					bitrate = 1600,
 					video_resolution = '360',
 					audio_channels = 2,
@@ -599,21 +578,12 @@ def PlayVideoNFLN(url, bitrate):
           Log.Debug('=========== rendering for pc      ==========')
         else:
           Log.Debug('=========== rendering for iphone  ==========')
-	m3u8_url4500 = m3u8_url.replace("adaptive","http").replace("iphone","4500_" + replacement)
-	m3u8_url3000 = m3u8_url.replace("adaptive","http").replace("iphone","3000_" + replacement)
-	m3u8_url2400 = m3u8_url.replace("adaptive","http").replace("iphone","2400_" + replacement)
 	m3u8_url1600 = m3u8_url.replace("adaptive","http").replace("iphone","1600_" + replacement)
 	m3u8_url1200 = m3u8_url.replace("adaptive","http").replace("iphone","1200_" + replacement)
 	m3u8_url800 = m3u8_url.replace("adaptive","http").replace("iphone","800_" + replacement)
 	m3u8_url400 = m3u8_url.replace("adaptive","http").replace("iphone","400_" + replacement)
 	
-	if bitrate == '4500':
- 		return IndirectResponse(VideoClipObject, key = HTTPLiveStreamURL(m3u8_url4500))
- 	elif bitrate == '3000':
- 		return IndirectResponse(VideoClipObject, key = HTTPLiveStreamURL(m3u8_url3000))
- 	elif bitrate == '2400':
- 		return IndirectResponse(VideoClipObject, key = HTTPLiveStreamURL(m3u8_url2400))
- 	elif bitrate == '1600':
+ 	if bitrate == '1600':
  		return IndirectResponse(VideoClipObject, key = HTTPLiveStreamURL(m3u8_url1600))
  	elif bitrate == '1200':
  		return IndirectResponse(VideoClipObject, key = HTTPLiveStreamURL(m3u8_url1200))
