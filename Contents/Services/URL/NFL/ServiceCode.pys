@@ -48,21 +48,11 @@ def MetadataObjectForURL(url):
 #################################################
 	if url.endswith("nflnetwork"):
 		
-		try:
-			page = HTML.ElementFromURL(NFL_NETWORK_SCHEDULE, errors='ignore', cacheTime=1)
-			onnow = page.xpath('//ul[@class="nextOn clearFix"]/li[2]/div/a/text()')[0]
-			timestarted = page.xpath('//ul[@class="nextOn clearFix"]/li[1]/text()')[0]
-		except:
-			onnow = ""
-			timestarted = ""
+                onnow = ""
+                timestarted = ""
 		
-		try:
-			page = HTML.ElementFromURL(NFL_NETWORK_SCHEDULE, errors='ignore', cacheTime=1)
-			nextstarted = page.xpath('//ul[@class="schedule hoverable"]/li[3]/ul/li[1]/text()')[0]
-			onnext = page.xpath('//ul[@class="schedule hoverable"]/li[3]/ul/li[2]/div/a/text()')[0]
-		except:
-			nextstarted = ""
-			onnext = ""
+                nextstarted = ""
+                onnext = ""
 		
 		return VideoClipObject(
 			title = "NFL Network",
@@ -194,7 +184,7 @@ def MediaObjectsForURL(url):
 			return [
 				MediaObject(
 					bitrate = 1600,
-					video_resolution = '360',
+					video_resolution = '540',
 					audio_channels = 2,
 					optimized_for_streaming = True,
 					parts = [PartObject(key = HTTPLiveStreamURL(Callback(PlayVideoNFLN, url = url, bitrate = '1600')))]
@@ -208,7 +198,7 @@ def MediaObjectsForURL(url):
 				),
 				MediaObject(
 					bitrate = 800,
-					video_resolution = '224',
+					video_resolution = '360',
 					audio_channels = 2,
 					optimized_for_streaming = True,
 					parts = [PartObject(key = HTTPLiveStreamURL(Callback(PlayVideoNFLN, url = url, bitrate = '800')))]
