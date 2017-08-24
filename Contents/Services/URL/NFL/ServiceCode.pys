@@ -400,11 +400,12 @@ def PlayVideo(url, bitrate):
 def PlayVideoGP(url, bitrate):
 	
 	if url.startswith("http://game"):
-		Log.Debug("Logging in")
+		Log.Debug("Logging in play video GP")
 		username = Prefs['username']
 		password = Prefs['password']
 	
 		if url.startswith("http://gamepass.nfl.com"):
+                        Log.Debug("logging in http://game")
 			authentication_url = "https://gamepass.nfl.com/secure/authenticate"
 			post_values = {
 				'username' : username,
@@ -512,39 +513,11 @@ def PlayVideoGP(url, bitrate):
 		live_game_id = new_url.replace("http://gamepass.nfl.com/game/", "")
 					
 		if url.endswith("#Live"):
-			post_values3 = {
-			'id' : live_game_id,
-			'type' : 'game',
-			'format' : 'json',
-			'nt' : '1',
-			'gt' : 'dvr'
-			}
 			publish_url2 = "https://gamepass.nfl.com/service/publishpoint?type=game&gs=3&gt=1&format=json&id=" + live_game_id
-			post_values2 = {
-			'id' : live_game_id,
-			'type' : 'game',
-			'format' : 'json',
-			'nt' : '1',
-			'gt' : 'live'
-			}
 			publish_url = "https://gamepass.nfl.com/service/publishpoint?type=game&gs=1&gt=1&format=json&id=" + live_game_id
 		elif url.endswith("#Condensed"):
-			post_values2 = {
-			'id' : live_game_id,
-			'type' : 'game',
-			'format' : 'json',
-			'nt' : '1',
-			'gt' : 'condensed'
-			}
 			publish_url = "https://gamepass.nfl.com/service/publishpoint?type=game&gs=3&gt=8&format=json&id=" + live_game_id
 		else:
-			post_values2 = {
-			'id' : live_game_id,
-			'type' : 'game',
-			'format' : 'json',
-			'nt' : '1',
-			'gt' : 'archive'
-			}
 			publish_url = "https://gamepass.nfl.com/service/publishpoint?type=game&gs=3&gt=1&format=json&id=" + live_game_id
 
 
@@ -556,14 +529,21 @@ def PlayVideoGP(url, bitrate):
 		m3u8_page = json.loads(m3u8_pagedata)
 		m3u8_url = m3u8_page['path']
 		Log.Debug("path: " + m3u8_url)
-		index = m3u8_url.find('_iphone.m3u8')
-		m3u8_url4500 = m3u8_url[:index] + '_4500' + m3u8_url[index:]
-		m3u8_url3000 = m3u8_url[:index] + '_3000' + m3u8_url[index:]
-		m3u8_url2400 = m3u8_url[:index] + '_2400' + m3u8_url[index:]
-		m3u8_url1600 = m3u8_url[:index] + '_1600' + m3u8_url[index:]
-		m3u8_url1200 = m3u8_url[:index] + '_1200' + m3u8_url[index:]
-		m3u8_url800 = m3u8_url[:index] + '_800' + m3u8_url[index:]
-		m3u8_url400 = m3u8_url[:index] + '_400' + m3u8_url[index:]
+		#index = m3u8_url.find('_iphone.m3u8')
+		#m3u8_url4500 = m3u8_url[:index] + '_4500' + m3u8_url[index:]
+		#m3u8_url3000 = m3u8_url[:index] + '_3000' + m3u8_url[index:]
+		#m3u8_url2400 = m3u8_url[:index] + '_2400' + m3u8_url[index:]
+		#m3u8_url1600 = m3u8_url[:index] + '_1600' + m3u8_url[index:]
+		#m3u8_url1200 = m3u8_url[:index] + '_1200' + m3u8_url[index:]
+		#m3u8_url800 = m3u8_url[:index] + '_800' + m3u8_url[index:]
+		#m3u8_url400 = m3u8_url[:index] + '_400' + m3u8_url[index:]
+                m3u8_url4500 = m3u8_url.replace("adaptive","http").replace("iphone","4500_android")
+                m3u8_url3000 = m3u8_url.replace("adaptive","http").replace("iphone","3000_android")
+                m3u8_url2400 = m3u8_url.replace("adaptive","http").replace("iphone","2400_android")
+                m3u8_url1600 = m3u8_url.replace("adaptive","http").replace("iphone","1600_android")
+                m3u8_url1200 = m3u8_url.replace("adaptive","http").replace("iphone","1200_android")
+                m3u8_url800 = m3u8_url.replace("adaptive","http").replace("iphone","800_android")
+                m3u8_url400 = m3u8_url.replace("adaptive","http").replace("iphone","400_android")
 	
 	if bitrate == '4500':
 		try:
@@ -588,7 +568,7 @@ def PlayVideoGP(url, bitrate):
 @indirect
 def PlayVideoNFLN(url, bitrate):
 
-	Log.Debug("Logging in")
+	Log.Debug("Logging in NFL network")
 	username = Prefs['username']
 	password = Prefs['password']
 
