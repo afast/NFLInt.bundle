@@ -56,14 +56,14 @@ def VideoMainMenu():
       sTitle = TEAMS[category]
       oc.add(DirectoryObject(key = Callback(PlayMenu, url=BASE_URL % Prefs['team']), title=sTitle, summary="Set your favourite team in Preferences and browse videos for that team here", thumb=R("%s.png" % Prefs['team'])))
 
-    oc.add(DirectoryObject(key = Callback(NFLVideosMenu), title="NFL.com Videos", summary="Browse videos from NFL.com/Videos"))
+  oc.add(DirectoryObject(key = Callback(NFLVideosMenu), title="NFL.com Videos", summary="Browse videos from NFL.com/Videos"))
     # Remove My Team sub menu and also NFL Now, will keep code in case I decide to add NFL Now again.
     # oc.add(DirectoryObject(key = Callback(NFLMyTeamMenu), title=sTitle, summary="Set your favourite team in Preferences and browse videos for that team here", thumb=R("%s.png" % Prefs['team'])))
     # oc.add(DirectoryObject(key = Callback(NFLNowMenu), title="NFL Now", summary="Browse videos from NFL Now", thumb=R("nflnow.png")))
-    if Prefs['gamepasssub'] == "GamePass International":
-      oc.add(DirectoryObject(key = Callback(GamepassMenu), title="NFL GamePass International", summary="NFL GamePass subscribers only", thumb=R("gamepass.png")))
+  if Prefs['gamepasssub'] == "GamePass International":
+    oc.add(DirectoryObject(key = Callback(GamepassMenu), title="NFL GamePass International", summary="NFL GamePass subscribers only", thumb=R("gamepass.png")))
 
-    oc.add(PrefsObject(title="Preferences", summary="Set My Team. Enter subscription details for Gamepass", thumb=R("icon-prefs.png")))
+  oc.add(PrefsObject(title="Preferences", summary="Set My Team. Enter subscription details for Gamepass", thumb=R("icon-prefs.png")))
   return oc
 
 ###################################################################################################
