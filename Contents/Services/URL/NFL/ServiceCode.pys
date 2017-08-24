@@ -533,7 +533,7 @@ def PlayVideoGP(url, bitrate):
                 if Client.Platform == ClientPlatform.Android:
                   replacement = "android"
                   Log.Debug('=========== rendering for android ==========')
-                elif Client.Platform == ClientPlatform.iOS or Client.Platform == ClientPlatform.None:
+                elif Client.Platform == ClientPlatform.iOS or Client.Platform == "None":
                   replacement = "iphone"
                   Log.Debug('=========== rendering for iphone ==========')
                 else:
