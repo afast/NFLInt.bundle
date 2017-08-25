@@ -442,10 +442,13 @@ def PlayVideoGP(url, bitrate):
 		m3u8_url = m3u8_page['path']
 
         final_m3u8_url = m3u8_url
-        if Client.Platform == ClientPlatform.Android:
-                final_m3u8_url = m3u8_url.replace("iphone", "android")
-        elif Client.Platform in [ClientPlatform.MacOSX, ClientPlatform.Linux, ClientPlatform.Windows, "Chrome"]:
-                final_m3u8_url = m3u8_url.replace("iphone", "pc")
+        try:
+                if Client.Platform == ClientPlatform.Android:
+                        final_m3u8_url = m3u8_url.replace("iphone", "android")
+                elif Client.Platform in [ClientPlatform.MacOSX, ClientPlatform.Linux, ClientPlatform.Windows, "Chrome"]:
+                        final_m3u8_url = m3u8_url.replace("iphone", "pc")
+        except:
+                final_m3u8_url = m3u8_url
 
         return IndirectResponse(VideoClipObject, key = HTTPLiveStreamURL(final_m3u8_url))
 
@@ -477,10 +480,13 @@ def PlayVideoNFLN(url, bitrate):
 	m3u8_url = m3u8_page['path']
 
         final_m3u8_url = m3u8_url
-        if Client.Platform == ClientPlatform.Android:
-                final_m3u8_url = m3u8_url.replace("iphone", "android")
-        elif Client.Platform in [ClientPlatform.MacOSX, ClientPlatform.Linux, ClientPlatform.Windows, "Chrome"]:
-                final_m3u8_url = m3u8_url.replace("iphone", "pc")
+        try:
+                if Client.Platform == ClientPlatform.Android:
+                        final_m3u8_url = m3u8_url.replace("iphone", "android")
+                elif Client.Platform in [ClientPlatform.MacOSX, ClientPlatform.Linux, ClientPlatform.Windows, "Chrome"]:
+                        final_m3u8_url = m3u8_url.replace("iphone", "pc")
+        except:
+                final_m3u8_url = m3u8_url
 	
         return IndirectResponse(VideoClipObject, key = HTTPLiveStreamURL(final_m3u8_url))
 
