@@ -372,7 +372,8 @@ def PlayVideo(url, bitrate):
 @indirect
 def PlayVideoGP(url, bitrate):
 	
-        Log.Debug("===================== play nfl network " + url + "========== " + bitrate + " ============")
+        Log.Debug("===================== play nfl game " + url + "========== " + bitrate + " ============")
+	headers_value = {'User-Agent' : 'iPhone'}
 	if url.startswith("http://game"):
 		Log.Debug("Logging in play video GP")
 		username = Prefs['username']
@@ -385,7 +386,7 @@ def PlayVideoGP(url, bitrate):
 				'username' : username,
 				'password' : password
 				}	
-			login = HTTP.Request(url=authentication_url, values=post_values, cacheTime=0).content
+			login = HTTP.Request(url=authentication_url, values=post_values, headers=headers_value, cacheTime=0).content
 			Log.Debug(login)
 
 		if url.startswith("http://gamerewind.nfl.com"):
@@ -516,7 +517,8 @@ def PlayVideoGP(url, bitrate):
 		new_url = url.replace("#Condensed", "").replace("#Live", "").replace("nflgr", "nflgp").replace("gamerewind", "gamepass")
 		Log.Debug(new_url)
 		cookie_values = HTTP.CookiesForURL("https://gamepass.nfl.com")
-		headers_value = {'Cookie' : cookie_values}
+		HTTP.Headers['Cookie'] = cookie_values
+		Log.Debug(cookie_values)
 	
 		live_game_id = new_url.replace("http://gamepass.nfl.com/game/", "")
 					
@@ -531,8 +533,10 @@ def PlayVideoGP(url, bitrate):
 
 		headers_value2 = {'Cookie' : cookie_values, 'User-Agent' : 'iPhone'}
 		try:
+			Log.Debug("Getting url: " + publish_url)
 			m3u8_pagedata = HTTP.Request(url=publish_url, headers=headers_value2).content
 		except:
+			Log.Debug("Getting url: " + publish_url2)
 			m3u8_pagedata = HTTP.Request(url=publish_url2, headers=headers_value2).content
 		m3u8_page = json.loads(m3u8_pagedata)
 		m3u8_url = m3u8_page['path']
@@ -555,6 +559,8 @@ def PlayVideoGP(url, bitrate):
                 m3u8_url800 = m3u8_url.replace("adaptive","http").replace("iphone","800_"+ replacement)
                 m3u8_url400 = m3u8_url.replace("adaptive","http").replace("iphone","400_"+ replacement)
 	
+		
+	return IndirectResponse(VideoClipObject, key = HTTPLiveStreamURL(m3u8_url))
 	if bitrate == '4500':
 		try:
 			headers = HTTP.Request(m3u8_url4500).headers
@@ -594,6 +600,8 @@ def PlayVideoNFLN(url, bitrate):
 	Log.Debug("NFL Network Live")
 	cookie_values = HTTP.CookiesForURL("https://gamepass.nfl.com")
 	headers_value = {'Cookie' : cookie_values, 'User-Agent' : 'iPhone'}
+	HTTP.Headers['Cookie'] = cookie_values
+	Log.Debug(cookie_values)
 	publish_url = "https://gamepass.nfl.com/service/publishpoint?type=channel&id=1&format=json"
 	m3u8_pagedata = HTTP.Request(url=publish_url, headers=headers_value).content
 	m3u8_page = json.loads(m3u8_pagedata)
