@@ -412,13 +412,6 @@ def PlayVideoGP(url, bitrate):
                 m3u8_pagedata = HTTP.Request(url=publish_url, headers=headers_value).content
                 m3u8_page = json.loads(m3u8_pagedata)
                 m3u8_url = m3u8_page['path']
-
-                Log.Debug("path: " + m3u8_url)
-                replacement = "iphone"
-                if Client.Platform == ClientPlatform.Android:
-                  m3u8_url = m3u8_url.replace("iphone", "android")
-                elif Client.Platform in [ClientPlatform.MacOSX, ClientPlatform.Linux, ClientPlatform.Windows, "Chrome"]:
-                  m3u8_url = m3u8_url.replace("iphone", "pc")
 				
 	else:
 		Log.Debug("NFL Gamepass/Rewind Game")
@@ -448,12 +441,14 @@ def PlayVideoGP(url, bitrate):
 		m3u8_page = json.loads(m3u8_pagedata)
 		m3u8_url = m3u8_page['path']
 
-                if Client.Platform == ClientPlatform.Android:
-                  m3u8_url = m3u8_url.replace("iphone", "android")
-                elif Client.Platform in [ClientPlatform.MacOSX, ClientPlatform.Linux, ClientPlatform.Windows, "Chrome"]:
-                  m3u8_url = m3u8_url.replace("iphone", "pc")
-		
-	return IndirectResponse(VideoClipObject, key = HTTPLiveStreamURL(m3u8_url))
+        final_m3u8_url = m3u8_url
+        replacement = "iphone"
+        if Client.Platform == ClientPlatform.Android:
+          final_m3u8_url = m3u8_url.replace("iphone", "android")
+        elif Client.Platform in [ClientPlatform.MacOSX, ClientPlatform.Linux, ClientPlatform.Windows, "Chrome"]:
+          final_m3u8_url = m3u8_url.replace("iphone", "pc")
+
+        return IndirectResponse(VideoClipObject, key = HTTPLiveStreamURL(final_m3u8_url))
 
 ####################################################################################################
 @indirect
@@ -481,32 +476,14 @@ def PlayVideoNFLN(url, bitrate):
 	m3u8_pagedata = HTTP.Request(url=publish_url, headers=headers_value).content
 	m3u8_page = json.loads(m3u8_pagedata)
 	m3u8_url = m3u8_page['path']
-	Log.Debug("path: " + m3u8_url)
-        replacement = "iphone"
+
+        final_m3u8_url = m3u8_url
         if Client.Platform == ClientPlatform.Android:
-          replacement = "android"
-          Log.Debug('=========== rendering for android ==========')
+          final_m3u8_url = m3u8_url.replace("iphone", "android")
         elif Client.Platform in [ClientPlatform.MacOSX, ClientPlatform.Linux, ClientPlatform.Windows, "Chrome"]:
-          replacement = "pc"
-          Log.Debug('=========== rendering for pc      ==========')
-        else:
-          Log.Debug('=========== rendering for iphone  ==========')
-	m3u8_url1600 = m3u8_url.replace("adaptive","http").replace("iphone","1600_" + replacement)
-	m3u8_url1200 = m3u8_url.replace("adaptive","http").replace("iphone","1200_" + replacement)
-	m3u8_url800 = m3u8_url.replace("adaptive","http").replace("iphone","800_" + replacement)
-	m3u8_url400 = m3u8_url.replace("adaptive","http").replace("iphone","400_" + replacement)
+          final_m3u8_url = m3u8_url.replace("iphone", "pc")
 	
-	return IndirectResponse(VideoClipObject, key = HTTPLiveStreamURL(m3u8_url))
- 	if bitrate == '1600':
-                Log.Debug('====== responding with livestream ======')
-                Log.Debug(m3u8_url1600)
- 		return IndirectResponse(VideoClipObject, key = HTTPLiveStreamURL(m3u8_url1600))
- 	elif bitrate == '1200':
- 		return IndirectResponse(VideoClipObject, key = HTTPLiveStreamURL(m3u8_url1200))
- 	elif bitrate == '800':
- 		return IndirectResponse(VideoClipObject, key = HTTPLiveStreamURL(m3u8_url800))
- 	elif bitrate == '400':
- 		return IndirectResponse(VideoClipObject, key = HTTPLiveStreamURL(m3u8_url400))
+        return IndirectResponse(VideoClipObject, key = HTTPLiveStreamURL(final_m3u8_url))
 
 ####################################################################################################
 @indirect
