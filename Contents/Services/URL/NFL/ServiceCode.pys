@@ -60,12 +60,6 @@ def MetadataObjectForURL(url):
      	)
      		
 #################################################
-	if url.startswith("http://gamepass.nfl.com/nflgp/console.jsp?rza="):
-		return VideoClipObject(
-        	title = "NFL Redzone Archive"
-    	)
-    	
-#################################################
 	if url.startswith("http://gamepass.nfl.com/nflgp/console.jsp?nfnas="):
 	
 		new_url = url.split("#")
@@ -452,41 +446,6 @@ def PlayVideoGP(url, bitrate):
 		m3u8_url800 = m3u8_url.replace("adaptive","http").replace("iphone","800")
 		m3u8_url400 = m3u8_url.replace("adaptive","http").replace("iphone","400")
 				
-	elif url.startswith("http://gamepass.nfl.com/nflgp/console.jsp?rza="):
-		Log.Debug("NFL Redzone Archive")
-		cookie_values = HTTP.CookiesForURL(url)
-		headers_value = {'Cookie' : cookie_values}
-		date1 = url.replace("http://gamepass.nfl.com/nflgp/console.jsp?rza=", "")
-		date2 = date1.replace("/","")
-		if date2.startswith("2011"):
-			season = "2011"	
-		if date2.startswith("2012"):
-			season = "2012"
-		if date2.startswith("2013"):
-			season = "2013"
-		if date2.startswith("2014"):
-			season = "2014"
-
-		publish_url = "http://gamepass.nfl.com/nflgp/servlets/publishpoint"
-		post_values2 = {
-		'id' : '2',
-		'type' : 'channel',
-		'nt' : '1',
-		'date1' : date1,
-		'date2' : date2,
-		'season' : season
-		}
-		headers_value2 = {'Cookie' : cookie_values, 'User-Agent' : 'iPhone'}
-		m3u8_pagedata = HTTP.Request(url=publish_url, values=post_values2, headers=headers_value2).content
-		m3u8_page = XML.ElementFromString(m3u8_pagedata)
-		m3u8_url = m3u8_page.xpath('//path/text()')[0]
-		m3u8_url4500 = m3u8_url.replace("adaptive","http").replace("iphone","4500")
-		m3u8_url3000 = m3u8_url.replace("adaptive","http").replace("iphone","3000")
-		m3u8_url2400 = m3u8_url.replace("adaptive","http").replace("iphone","2400")
-		m3u8_url1600 = m3u8_url.replace("adaptive","http").replace("iphone","1600")
-		m3u8_url1200 = m3u8_url.replace("adaptive","http").replace("iphone","1200")
-		m3u8_url800 = m3u8_url.replace("adaptive","http").replace("iphone","800")
-		m3u8_url400 = m3u8_url.replace("adaptive","http").replace("iphone","400")
 	elif url.startswith("http://gamepass.nfl.com/nflgp/console.jsp?nfnas="):
 		Log.Debug("NFL Gamepass Archived Show")
 		new_url = url.split("#")
@@ -598,7 +557,7 @@ def PlayVideoNFLN(url, bitrate):
 	login = HTTP.Request(url=authentication_url, values=post_values, cacheTime=0).content
 
 	Log.Debug("NFL Network Live")
-	cookie_values = HTTP.CookiesForURL("https://gamepass.nfl.com")
+	cookie_values = HTTP.CookiesForURL("https://gamepass.nfl.com/channel/nflnetwork")
 	headers_value = {'Cookie' : cookie_values, 'User-Agent' : 'iPhone'}
 	HTTP.Headers['Cookie'] = cookie_values
 	Log.Debug(cookie_values)
@@ -607,7 +566,7 @@ def PlayVideoNFLN(url, bitrate):
 	m3u8_page = json.loads(m3u8_pagedata)
 	m3u8_url = m3u8_page['path']
 	Log.Debug("path: " + m3u8_url)
-        replacement = "pc"
+        replacement = "iphone"
         if Client.Platform == ClientPlatform.Android:
           replacement = "android"
           Log.Debug('=========== rendering for android ==========')
@@ -615,12 +574,13 @@ def PlayVideoNFLN(url, bitrate):
           replacement = "pc"
           Log.Debug('=========== rendering for pc      ==========')
         else:
-          Log.Debug('=========== rendering for pc  ==========')
+          Log.Debug('=========== rendering for iphone  ==========')
 	m3u8_url1600 = m3u8_url.replace("adaptive","http").replace("iphone","1600_" + replacement)
 	m3u8_url1200 = m3u8_url.replace("adaptive","http").replace("iphone","1200_" + replacement)
 	m3u8_url800 = m3u8_url.replace("adaptive","http").replace("iphone","800_" + replacement)
 	m3u8_url400 = m3u8_url.replace("adaptive","http").replace("iphone","400_" + replacement)
 	
+	return IndirectResponse(VideoClipObject, key = HTTPLiveStreamURL(m3u8_url))
  	if bitrate == '1600':
                 Log.Debug('====== responding with livestream ======')
                 Log.Debug(m3u8_url1600)
