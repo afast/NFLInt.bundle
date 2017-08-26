@@ -10,7 +10,7 @@ BASE_URL     = 'http://www.nfl.com/feeds-rs/videos/byChannel/%s.json?limit=100&o
 LATEST_VIDEOS    = 'http://www.nfl.com/feeds-rs/videos/byChannel/nfl-videos.json?limit=100&offset=0'
 NFL_NETWORK_LIVE    = 'http://gamepass.nfl.com/channel/nflnetwork'
 NFL_REDZONE_LIVE   = 'http://gamepass.nfl.com/channel/nflredzone'
-GAMEPASS_SCHEDULE   = 'http://gamepass.nfl.com/schedule'
+GAMEPASS_SCHEDULE   = 'https://gamepass.nfl.com/schedule'
 NFL_VIDEOS_JSON    = 'http://www.nfl.com/static/embeddablevideo/%s.json'
 NFL_NETWORK_SCHEDULE  = 'http://neulionsmbnyc-a.akamaihd.net/u/nfl/nfl/epg/nflnetwork/2017/08/11.js'
 NFLNAIMAGE      = 'http://smb.cdn.neulion.com/u/nfl/nfl/thumbs/'
@@ -212,8 +212,11 @@ def GamepassWeek(season):
   currentSeason = Datetime.Now().year -1 if Datetime.Now().month < 3 else Datetime.Now().year
 
   currentWeek = '100'
+  Log.Debug(currentSeason)
+  Log.Debug(season)
   if str(currentSeason) == season:
     current_schedule = JSON.ObjectFromURL("https://gamepass.nfl.com/schedule?format=json")
+    Log.Debug(current_schedule)
     if len(current_schedule['week']) == 1:
       currentWeek = current_schedule['gameType'] + '0' + current_schedule['week']
     else:
@@ -261,12 +264,9 @@ def GamepassPlayweek():
 
   oc = ObjectContainer(title2="NFL Game Pass")
 
-  schedule_page = HTTP.Request(GAMEPASS_SCHEDULE)
-  content = schedule_page.content
-  try:
-    games = json.loads(re.search('var scheduleGames = (\[[a-zA-Z0-9\r\n\s{}":,.-]*\]);', content).group(1))
-  except AttributeError:
-    games = []
+  Log.Debug("Game Pass Week")
+  games = JSON.ObjectFromURL('https://gamepass.nfl.com/schedule?format=json')['games']
+  Log.Debug(games)
 
   for stream in games:
     sTeam1 = stream['awayTeam']['name']
