@@ -1,4 +1,5 @@
 import json
+
 NFL_VIDEOS_JSON				= 'http://www.nfl.com/static/embeddablevideo/%s.json'
 NFL_VIDEOS_URL				= 'http://a.video.nfl.com/'
 NFL_NETWORK_SCHEDULE		= 'http://www.locatetv.com/listings/nflnet'
@@ -179,10 +180,6 @@ def MediaObjectsForURL(url):
 				MediaObject(
 					bitrate = 1600,
 					video_resolution = '540',
-                                        protocol="hls",
-                                        container="mpegts",
-                                        video_codec="h264",
-                                        audio_codec="aac",
 					audio_channels = 2,
 					optimized_for_streaming = True,
 					parts = [PartObject(key = HTTPLiveStreamURL(Callback(PlayVideoNFLN, url = url, bitrate = '1600')))]
@@ -378,7 +375,8 @@ def PlayVideoGP(url, bitrate):
 			authentication_url = "https://gamepass.nfl.com/secure/authenticate"
 			post_values = {
 				'username' : username,
-				'password' : password
+				'password' : password,
+				'cookielink' : True
 				}	
 			login = HTTP.Request(url=authentication_url, values=post_values, headers=headers_value, cacheTime=0).content
 			Log.Debug(login)
@@ -387,7 +385,8 @@ def PlayVideoGP(url, bitrate):
 			authentication_url = "https://gamepass.nfl.com/secure/authenticate"
 			post_values = {
 				'username' : username,
-				'password' : password
+				'password' : password,
+				'cookielink' : True
 				}
 			login = HTTP.Request(url=authentication_url, values=post_values, cacheTime=0).content
 	
@@ -400,7 +399,8 @@ def PlayVideoGP(url, bitrate):
                 authentication_url = "https://gamepass.nfl.com/secure/authenticate"
                 post_values = {
                         'username' : username,
-                        'password' : password
+                        'password' : password,
+			'cookielink' : True
                         }
 
                 login = HTTP.Request(url=authentication_url, values=post_values, cacheTime=0).content
@@ -418,7 +418,6 @@ def PlayVideoGP(url, bitrate):
 		new_url = url.replace("#Condensed", "").replace("#Live", "").replace("nflgr", "nflgp").replace("gamerewind", "gamepass")
 		Log.Debug(new_url)
 		cookie_values = HTTP.CookiesForURL("https://gamepass.nfl.com")
-		HTTP.Headers['Cookie'] = cookie_values
 		Log.Debug(cookie_values)
 	
 		live_game_id = new_url.replace("http://gamepass.nfl.com/game/", "")
@@ -427,28 +426,21 @@ def PlayVideoGP(url, bitrate):
 			publish_url2 = "https://gamepass.nfl.com/service/publishpoint?type=game&gs=3&gt=1&format=json&id=" + live_game_id
 			publish_url = "https://gamepass.nfl.com/service/publishpoint?type=game&gs=1&gt=1&format=json&id=" + live_game_id
 		elif url.endswith("#Condensed"):
+			publish_url2 = "https://gamepass.nfl.com/service/publishpoint?type=game&gs=3&gt=8&format=json&id=" + live_game_id
 			publish_url = "https://gamepass.nfl.com/service/publishpoint?type=game&gs=3&gt=8&format=json&id=" + live_game_id
 		else:
+			publish_url2 = "https://gamepass.nfl.com/service/publishpoint?type=game&gs=3&gt=1&format=json&id=" + live_game_id
 			publish_url = "https://gamepass.nfl.com/service/publishpoint?type=game&gs=3&gt=1&format=json&id=" + live_game_id
 
 
 		headers_value2 = {'Cookie' : cookie_values, 'User-Agent' : 'iPhone'}
-		try:
-			m3u8_pagedata = HTTP.Request(url=publish_url, headers=headers_value2).content
-		except:
-			m3u8_pagedata = HTTP.Request(url=publish_url2, headers=headers_value2).content
-
-		m3u8_page = json.loads(m3u8_pagedata)
+		m3u8_page = JSON.ObjectFromURL(publish_url, headers=headers_value2)
 		m3u8_url = m3u8_page['path']
 
-        final_m3u8_url = m3u8_url
-        try:
-                if Client.Platform == ClientPlatform.Android:
-                        final_m3u8_url = m3u8_url.replace("iphone", "android")
-                elif Client.Platform in [ClientPlatform.MacOSX, ClientPlatform.Linux, ClientPlatform.Windows, "Chrome"]:
-                        final_m3u8_url = m3u8_url.replace("iphone", "pc")
-        except:
-                final_m3u8_url = m3u8_url
+	if Prefs['multi_playlist']:
+		final_m3u8_url = m3u8_url
+	else:
+		final_m3u8_url = m3u8_url.replace("iphone", bitrate + "_iphone")
 
         return IndirectResponse(VideoClipObject, key = HTTPLiveStreamURL(final_m3u8_url))
 
@@ -458,36 +450,36 @@ def PlayVideoNFLN(url, bitrate):
 
         Log.Debug("===================== play nfl network " + url + "========== " + bitrate + " ============")
 	Log.Debug("Logging in NFL network")
+
 	username = Prefs['username']
 	password = Prefs['password']
 
 	authentication_url = "https://gamepass.nfl.com/secure/authenticate"
 	post_values = {
 		'username' : username,
-		'password' : password
+		'password' : password,
+		'cookielink' : True
 		}
 
 	login = HTTP.Request(url=authentication_url, values=post_values, cacheTime=0).content
 
 	Log.Debug("NFL Network Live")
-	cookie_values = HTTP.CookiesForURL("https://gamepass.nfl.com/channel/nflnetwork")
+	cookie_values = HTTP.CookiesForURL("https://gamepass.nfl.com/")
 	headers_value = {'Cookie' : cookie_values, 'User-Agent' : 'iPhone'}
 	HTTP.Headers['Cookie'] = cookie_values
-	Log.Debug(cookie_values)
 	publish_url = "https://gamepass.nfl.com/service/publishpoint?type=channel&id=1&format=json"
-	m3u8_pagedata = HTTP.Request(url=publish_url, headers=headers_value).content
-	m3u8_page = json.loads(m3u8_pagedata)
+
+	m3u8_page = JSON.ObjectFromURL(publish_url, headers=headers_value)
 	m3u8_url = m3u8_page['path']
 
-        final_m3u8_url = m3u8_url
-        try:
-                if Client.Platform == ClientPlatform.Android:
-                        final_m3u8_url = m3u8_url.replace("iphone", "android")
-                elif Client.Platform in [ClientPlatform.MacOSX, ClientPlatform.Linux, ClientPlatform.Windows, "Chrome"]:
-                        final_m3u8_url = m3u8_url.replace("iphone", "pc")
-        except:
-                final_m3u8_url = m3u8_url
+	Log.Debug(m3u8_url)
+
+	if Prefs['multi_playlist']:
+		final_m3u8_url = m3u8_url
+	else:
+		final_m3u8_url = m3u8_url.replace("iphone", bitrate + "_iphone")
 	
+	Log.Debug(final_m3u8_url)
         return IndirectResponse(VideoClipObject, key = HTTPLiveStreamURL(final_m3u8_url))
 
 ####################################################################################################

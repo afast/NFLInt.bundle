@@ -18,5 +18,11 @@
     "label": "Bitrate for GamePass Live content (Only change from Auto if you experience buffering issues)",
     "values": ["Auto", "4500", "3000", "2400", "1600", "1200", "800", "400"],
     "default": "Auto"
+  },
+  {
+    "id": "multi_playlist",
+    "type": "bool",
+    "label": "Playlist type, try unchecking if your device doesn't support it",
+    "default": "true"
   }
 ]
