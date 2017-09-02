@@ -22,7 +22,7 @@
   {
     "id": "multi_playlist",
     "type": "bool",
-    "label": "Playlist type, try unchecking if your device doesn't support it",
+    "label": "Multy-Playlist Streaming Type, checked for AppleTV, uncheck for Android devices",
     "default": "true"
   }
 ]
