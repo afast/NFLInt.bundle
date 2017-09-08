@@ -269,28 +269,29 @@ def GamepassPlayweek():
   Log.Debug(games)
 
   for stream in games:
-    sTeam1 = stream['awayTeam']['name']
-    sTeam2 = stream['homeTeam']['name']
-    sTitle = "%s @ %s" % (sTeam1,sTeam2)
-    game_state = "Not Started"
-    try:
-      if stream['gameState'] == 0:
+    if stream['isGame'] == 'true':
+      sTeam1 = stream['awayTeam']['name']
+      sTeam2 = stream['homeTeam']['name']
+      sTitle = "%s @ %s" % (sTeam1,sTeam2)
+      game_state = "Not Started"
+      try:
+        if stream['gameState'] == 0:
+            sSummary = parser.parse(stream['dateTimeGMT']).strftime('%m/%d - %H:%M')
+        elif stream['gameState'] == 1:
+          sSummary = 'Game in Progress'
+          game_state = 'In Progress'
+        elif stream['gameState'] == 3:
+          sSummary = 'Game Finished'
+          game_state = 'Game Finished'
+        else:
+          game_state = 'Unknown'
           sSummary = parser.parse(stream['dateTimeGMT']).strftime('%m/%d - %H:%M')
-      elif stream['gameState'] == 1:
-        sSummary = 'Game in Progress'
-        game_state = 'In Progress'
-      elif stream['gameState'] == 3:
-        sSummary = 'Game Finished'
-        game_state = 'Game Finished'
-      else:
-        game_state = 'Unknown'
-        sSummary = parser.parse(stream['dateTimeGMT']).strftime('%m/%d - %H:%M')
-    except:
-      sSummary = "Couldn't get summary"
+      except:
+        sSummary = "Couldn't get summary"
 
-    sStreamURL = "http://gamepass.nfl.com/game/" + stream['id']
+      sStreamURL = "http://gamepass.nfl.com/game/" + stream['id']
 
-    oc.add(VideoClipObject(url=sStreamURL + "#Live", title=sTitle + ' - ' + game_state, summary = sSummary, thumb=R("icon-gamepass-live.png")))
+      oc.add(VideoClipObject(url=sStreamURL + "#Live", title=sTitle + ' - ' + game_state, summary = sSummary, thumb=R("icon-gamepass-live.png")))
 
   return oc
 
