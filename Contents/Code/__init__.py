@@ -246,14 +246,15 @@ def GamepassPlay(week, season, week_title):
   list = JSON.ObjectFromURL('https://gamepass.nfl.com/schedule?season=' + season + '&gametype=' + week[:1] + '&week=' + week[1:] + '&format=json')['games']
 
   for stream in list:
-    sTeam1 = stream['awayTeam']['name']
-    sTeam2 = stream['homeTeam']['name']
-    sTitle = "%s @ %s" % (sTeam1,sTeam2)
+    if stream['isGame'] == 'true':
+      sTeam1 = stream['awayTeam']['name']
+      sTeam2 = stream['homeTeam']['name']
+      sTitle = "%s @ %s" % (sTeam1,sTeam2)
 
-    sStreamURL = "http://gamepass.nfl.com/game/" + stream['id']
+      sStreamURL = "http://gamepass.nfl.com/game/" + stream['id']
 
-    oc.add(VideoClipObject(url=sStreamURL + "#Condensed", title=sTitle + " - Condensed Game",  thumb=R("icon-gamepass.png")))
-    oc.add(VideoClipObject(url=sStreamURL + "#Full", title=sTitle + " - Full Length Game",  thumb=R("icon-gamepass.png")))
+      oc.add(VideoClipObject(url=sStreamURL + "#Condensed", title=sTitle + " - Condensed Game",  thumb=R("icon-gamepass.png")))
+      oc.add(VideoClipObject(url=sStreamURL + "#Full", title=sTitle + " - Full Length Game",  thumb=R("icon-gamepass.png")))
 
   return oc
 
