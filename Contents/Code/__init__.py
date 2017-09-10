@@ -329,7 +329,31 @@ def NflRedzoneMenu():
 
   oc = ObjectContainer(title2="NFL Redzone")
 
-  oc.add(VideoClipObject(url=NFL_REDZONE_LIVE, title="NFL Redzone Live", summary="Watch NFL Redzone Live", thumb=R("icon-nfl-redzone-live.png")))
+  games = JSON.ObjectFromURL('https://gamepass.nfl.com/schedule?format=json')['games']
+  Log.Debug(games)
+
+  for stream in games:
+    if stream['isGame'] == 'false' and stream['grouping'] == 'redzone':
+      sTitle = stream['name']
+      game_state = "Not Started"
+      try:
+        if stream['gameState'] == 0:
+            sSummary = parser.parse(stream['dateTimeGMT']).strftime('%m/%d - %H:%M')
+        elif stream['gameState'] == 1:
+          sSummary = 'Game in Progress'
+          game_state = 'In Progress'
+        elif stream['gameState'] == 3:
+          sSummary = 'Game Finished'
+          game_state = 'Game Finished'
+        else:
+          game_state = 'Unknown'
+          sSummary = parser.parse(stream['dateTimeGMT']).strftime('%m/%d - %H:%M')
+      except:
+        sSummary = "Couldn't get summary"
+
+      sStreamURL = "http://gamepass.nfl.com/game/" + stream['id']
+
+      oc.add(VideoClipObject(url=sStreamURL + "#Live", title=sTitle + ' - ' + game_state, summary = sSummary, thumb=R("icon-gamepass-live.png")))
 
   return oc
 
