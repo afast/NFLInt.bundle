@@ -2,6 +2,7 @@
 
 import re
 import json
+import datetime
 from dateutil import parser
 
 NFL_URL      = 'http://www.nfl.com'
@@ -253,8 +254,33 @@ def GamepassPlay(week, season, week_title):
 
       sStreamURL = "http://gamepass.nfl.com/game/" + stream['id']
 
-      oc.add(VideoClipObject(url=sStreamURL + "#Condensed", title=sTitle + " - Condensed Game",  thumb=R("icon-gamepass.png")))
+      if 'availablePrograms' in stream and stream['availablePrograms'] > 1:
+        oc.add(VideoClipObject(url=sStreamURL + "#Condensed", title=sTitle + " - Condensed Game",  thumb=R("icon-gamepass.png")))
       oc.add(VideoClipObject(url=sStreamURL + "#Full", title=sTitle + " - Full Length Game",  thumb=R("icon-gamepass.png")))
+    elif stream['grouping'] == 'redzone':
+      sTitle = stream['name']
+      game_state = "Not Started"
+      try:
+        if stream['gameState'] == 0:
+          sSummary = parser.parse(stream['date']).strftime('%m/%d - %H:%M')
+        elif stream['gameState'] == 1:
+          if datetime.datetime.utcnow() < parser.parse(stream['dateTimeGMT']):
+            sSummary = 'Pregame'
+          else:
+            sSummary = 'Game in Progress'
+          game_state = 'Live'
+        elif stream['gameState'] == 3 or stream['gameState'] == 2:
+          sSummary = 'Final'
+          game_state = 'Final'
+        else:
+          game_state = 'Unknown'
+          sSummary = parser.parse(stream['date']).strftime('%m/%d - %H:%M')
+      except:
+        sSummary = "Couldn't get summary"
+
+      sStreamURL = "http://gamepass.nfl.com/game/" + stream['id']
+
+      oc.add(VideoClipObject(url=sStreamURL + "#Live", title=sTitle + ' - ' + game_state, summary = sSummary, thumb=R("icon-gamepass-live.png")))
 
   return oc
 
@@ -277,16 +303,19 @@ def GamepassPlayweek():
       game_state = "Not Started"
       try:
         if stream['gameState'] == 0:
-            sSummary = parser.parse(stream['dateTimeGMT']).strftime('%m/%d - %H:%M')
+          sSummary = parser.parse(stream['date']).strftime('%m/%d - %H:%M')
         elif stream['gameState'] == 1:
-          sSummary = 'Game in Progress'
-          game_state = 'In Progress'
-        elif stream['gameState'] == 3:
-          sSummary = 'Game Finished'
-          game_state = 'Game Finished'
+          if datetime.datetime.utcnow() < parser.parse(stream['dateTimeGMT']):
+            sSummary = 'Pregame'
+          else:
+            sSummary = 'Game in Progress'
+          game_state = 'Live'
+        elif stream['gameState'] == 3 or stream['gameState'] == 2:
+          sSummary = 'Final'
+          game_state = 'Final'
         else:
           game_state = 'Unknown'
-          sSummary = parser.parse(stream['dateTimeGMT']).strftime('%m/%d - %H:%M')
+          sSummary = parser.parse(stream['date']).strftime('%m/%d - %H:%M')
       except:
         sSummary = "Couldn't get summary"
 
@@ -338,16 +367,16 @@ def NflRedzoneMenu():
       game_state = "Not Started"
       try:
         if stream['gameState'] == 0:
-            sSummary = parser.parse(stream['dateTimeGMT']).strftime('%m/%d - %H:%M')
+            sSummary = parser.parse(stream['date']).strftime('%m/%d - %H:%M')
         elif stream['gameState'] == 1:
           sSummary = 'Game in Progress'
           game_state = 'In Progress'
-        elif stream['gameState'] == 3:
+        elif stream['gameState'] == 2 or stream['gameState'] == 3:
           sSummary = 'Game Finished'
           game_state = 'Game Finished'
         else:
           game_state = 'Unknown'
-          sSummary = parser.parse(stream['dateTimeGMT']).strftime('%m/%d - %H:%M')
+          sSummary = parser.parse(stream['date']).strftime('%m/%d - %H:%M')
       except:
         sSummary = "Couldn't get summary"
 
